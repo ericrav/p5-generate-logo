@@ -5,7 +5,7 @@ import setupGUI from './gui';
 
 
 const Params = function() {
-  this.Type = 'A';
+  this.Type = 'E';
   this.Background = [255, 255, 255];
   this.Stroke = [0, 0, 0];
   this.Coverage = 50;
@@ -17,8 +17,6 @@ const Params = function() {
     const padding = 1.6;
     const download = p.createGraphics(this.Size*padding, this.Size*padding);
     download.image(this.pg, this.Size*(padding - 1)/2, this.Size*(padding - 1)/2, this.Size, this.Size, 0, 0, this.pg.width, this.pg.height);
-
-    // img.resize(0, this.Size);
     p.saveCanvas(download, 'belljar', 'png');
   }).bind(this);
 };
