@@ -24,4 +24,8 @@ export default (p, params, width, height) => {
     params.imgDim = [img.width, img.height];
     params.redraw = true;
   });
+
+  p.loadImage(require('../img/ear.svg'), img => {
+    params.shape = img;
+  });
 };
