@@ -10,7 +10,6 @@ export default (p, params, width, height) => {
 
       for (let x = 0; x < img.width; x++) {
         const i = 4 * (y*img.width + x);
-        // const b = p.brightness(p.color(img.pixels[i], img.pixels[i+1], img.pixels[i+2]));
 
         if (img.pixels[i+3] > 0) {
           if (!min) min = x;
@@ -23,9 +22,5 @@ export default (p, params, width, height) => {
     params.minMax = minMax;
     params.imgDim = [img.width, img.height];
     params.redraw = true;
-  });
-
-  p.loadImage(require('../img/ear.svg'), img => {
-    params.shape = img;
   });
 };

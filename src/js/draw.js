@@ -17,8 +17,6 @@ export default (params) => {
   const pg = params.pg;
   pg.clear();
 
-  console.log(params);
-
   const xOffset = (pg.width - 131*4) / 4;
 
   if (params.Type === LINES) {
@@ -32,8 +30,9 @@ export default (params) => {
       if (Math.random()*100 <= params.Coverage) pg.line(x1*2 + xOffset, y*2, x2*2 + xOffset, y*2);
     }
   } else if (params.Type === STEPS) {
-    console.log('ok');
-    console.log(params.shape);
+    pg.noFill();
+    pg.stroke(params.Stroke);
+
     const mapPoint = (x1, y1, x2, y2, x3, y3, x4, y4, size=1) => {
       const xOff = (251 - 251*size)/2 + xOffset;
       const yOff = (402 - 402*size)/2;
@@ -45,8 +44,6 @@ export default (params) => {
         x4*size + xOff, y4*size + yOff
       ];
     };
-    // const draw = size => pg.image(params.shape, (251 - 251*size)/2 + xOffset, (402 - 402*size)/2, 251*size, 402*size);
-
 
     const draw = size => {
       for (let point of curvePoints) {
