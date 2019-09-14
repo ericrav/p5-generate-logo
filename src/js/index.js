@@ -5,7 +5,7 @@ import setupGUI from './gui';
 
 
 const Params = function() {
-  this.Type = 'E';
+  this.Type = 'D';
   this.Background = [255, 255, 255];
   this.Stroke = [0, 0, 0];
   this.Coverage = 50;

@@ -1,4 +1,5 @@
 export default (p, params, width, height) => {
+  p.pixelDensity(2);
   p.createCanvas(width, height);
 
   p.loadImage(require('../img/ear.png'), img => {

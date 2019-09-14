@@ -25,7 +25,7 @@ const lines = (params) => {
     x1 += Math.pow(Math.random(), 10) * 30 * Math.pow(-1, Math.floor(Math.random()*2 + 1));
     let x2 = params.minMax[y][1];
     x2 += Math.pow(Math.random(), 10) * 40 * Math.pow(-1, Math.floor(Math.random()*2 + 1));
-    if (Math.random()*100 <= params.Coverage) pg.line(x1*2 + xOffset, y*2, x2*2 + xOffset, y*2);
+    if (Math.random()*100 <= params.Coverage+1) pg.line(x1*2 + xOffset, y*2, x2*2 + xOffset, y*2);
   }
 };
 
@@ -88,8 +88,8 @@ const angles = (params) => {
     const ry = Math.random() * params.minMax.length;
     const minMax = params.minMax[Math.floor(ry)];
     const rx = minMax[0] + Math.random()*(minMax[1] - minMax[0]);
-    const dx = x + (rx - x) * (Math.pow(Math.random(), 3)*0.65 + 0.1);
-    const dy = y + (ry - y) * (Math.pow(Math.random(), 3)*0.65 + 0.1);
+    const dx = x + (rx - x) * (Math.pow(Math.random(), 4)*0.4 + 0.15);
+    const dy = y + (ry - y) * (Math.pow(Math.random(), 4)*0.4 + 0.15);
     pg.vertex(dx*2 + xOffset, dy*2);
     randomVertex(dx, dy, times-1);
   };
@@ -106,7 +106,7 @@ const angles = (params) => {
   for (let y = params.minMax.length - 1; y >= 0; y-=3) {
     const x = params.minMax[y][0];
     if (Math.random()*100 <= params.Coverage) {
-      randomVertex(x, y, Math.random()*5 + 1);
+      randomVertex(x, y, Math.pow(Math.random(), 5)*12 + 1);
     } else {
       pg.vertex(x*2 + xOffset, y*2);
     }
@@ -119,23 +119,56 @@ const angles = (params) => {
 const curves = (params) => {
   const pg = params.pg;
   const xOffset = (pg.width - 131*4) / 4;
-  const mapPoint = (x1, y1, x2, y2, x3, y3, x4, y4, size=1) => {
+  const mapPoint = (x1, y1, x2, y2, x3, y3, x4, y4) => {
+
+    const size = (1 - Math.pow(Math.random(), 6)*0.7) + Math.pow(Math.random(), 10)*0.15;
+    const length = Math.pow(Math.random(), 10)*0.8 + 0.1;
+    const t0 = Math.random()*(1 - length);
+    const t1 = t0 + length;
+
+    // partial bezier curve: src: https://stackoverflow.com/a/879213
+    const u0 = 1.0 - t0;
+    const u1 = 1.0 - t1;
+
+    const qxa =  x1*u0*u0 + x2*2*t0*u0 + x3*t0*t0;
+    const qxb =  x1*u1*u1 + x2*2*t1*u1 + x3*t1*t1;
+    const qxc = x2*u0*u0 + x3*2*t0*u0 +  x4*t0*t0;
+    const qxd = x2*u1*u1 + x3*2*t1*u1 +  x4*t1*t1;
+
+    const qya =  y1*u0*u0 + y2*2*t0*u0 + y3*t0*t0;
+    const qyb =  y1*u1*u1 + y2*2*t1*u1 + y3*t1*t1;
+    const qyc = y2*u0*u0 + y3*2*t0*u0 +  y4*t0*t0;
+    const qyd = y2*u1*u1 + y3*2*t1*u1 +  y4*t1*t1;
+
+    const xa = qxa*u0 + qxc*t0;
+    const xb = qxa*u1 + qxc*t1;
+    const xc = qxb*u0 + qxd*t0;
+    const xd = qxb*u1 + qxd*t1;
+
+    const ya = qya*u0 + qyc*t0;
+    const yb = qya*u1 + qyc*t1;
+    const yc = qyb*u0 + qyd*t0;
+    const yd = qyb*u1 + qyd*t1;
+
+
     const xOff = (251 - 251*size)/2 + xOffset;
     const yOff = (402 - 402*size)/2;
 
     return [
-      x1*size + xOff, y1*size + yOff,
-      x2*size + xOff, y2*size + yOff,
-      x3*size + xOff, y3*size + yOff,
-      x4*size + xOff, y4*size + yOff
+      xa*size + xOff, ya*size + yOff,
+      xb*size + xOff, yb*size + yOff,
+      xc*size + xOff, yc*size + yOff,
+      xd*size + xOff, yd*size + yOff
     ];
   };
 
   pg.noFill();
   pg.stroke(params.Stroke);
 
-  for (let point of curvePoints) {
-    pg.bezier(...mapPoint(...point));
+  for (let i = 0; i <= params.Coverage; i++) {
+    for (let point of curvePoints) {
+      pg.bezier(...mapPoint(...point));
+    }
   }
 };
 
